@@ -1,8 +1,7 @@
-# TODO:  Подгрузить ViewSet-ты из предыдущих версий проекта (
-#  PostViewSet, CommentViewSet, GroupViewSet)
-# TODO:  описать в FollowViewSet получение списка подписок пользователя
-# TODO:  описать в FollowViewSet поиск по username
-from posts.models import Follow, Group, Post
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.viewsets import GenericViewSet
+
+from posts.models import Follow, Group, Post, Comment, User
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import get_object_or_404
@@ -46,14 +45,17 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post = self.get_post()
-        return post.comments
+        return Comment.objects.filter(post=post)
 
     def perform_create(self, serializer):
         post = self.get_post()
         return serializer.save(author=self.request.user, post=post)
 
 
-class FollowViewSet(viewsets.ModelViewSet):
+class FollowViewSet(
+        GenericViewSet,
+        ListModelMixin,
+        CreateModelMixin):
     serializer_class = FollowSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
@@ -61,3 +63,12 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Follow.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        following = User.objects.get(
+            username=self.request.data['following']
+        )
+        return serializer.save(
+            user=self.request.user,
+            following=following
+        )
