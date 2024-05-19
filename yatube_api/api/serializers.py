@@ -1,7 +1,7 @@
+from drf_extra_fields.fields import Base64ImageField
 from posts.models import Comment, Follow, Group, Post, User
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField, SlugRelatedField
-from drf_extra_fields.fields import Base64ImageField
 
 
 class BasePostSerializer(serializers.ModelSerializer):
