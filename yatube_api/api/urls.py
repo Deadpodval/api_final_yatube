@@ -11,6 +11,6 @@ router.register(
     CommentViewSet, basename='Comment'
 )
 urlpatterns = [
-    path('api/v1/', include(router.urls)),
-    path('api/v1/', include('djoser.urls.jwt')),
+    path('v1/', include(router.urls)),
+    path('v1/', include('djoser.urls.jwt')),
 ]

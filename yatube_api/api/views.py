@@ -1,4 +1,4 @@
-from posts.models import Comment, Follow, Group, Post, User
+from posts.models import Comment, Follow, Group, Post
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import get_object_or_404
@@ -64,10 +64,6 @@ class FollowViewSet(
         return Follow.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        following = User.objects.get(
-            username=self.request.data['following']
-        )
-        return serializer.save(
-            user=self.request.user,
-            following=following
+        serializer.save(
+            user=self.request.user
         )

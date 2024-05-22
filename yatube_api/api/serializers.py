@@ -1,6 +1,8 @@
 import base64
 
 from django.core.files.base import ContentFile
+from rest_framework.validators import UniqueTogetherValidator
+
 from posts.models import Comment, Follow, Group, Post, User
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField, SlugRelatedField
@@ -76,3 +78,4 @@ class FollowSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Нельзя подписки размножать против их воли >:['
             )
+        return value
