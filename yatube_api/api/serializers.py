@@ -65,14 +65,11 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def validate_following(self, value):
         user = self.context['request'].user
-        following = User.objects.get(
-            username=self.context['request'].data['following']
-        )
         if user == value:
             raise serializers.ValidationError(
                 'Нельзя подписки теребонькать >:['
             )
-        if Follow.objects.filter(user=user, following=following):
+        if Follow.objects.filter(user=user, following=value):
             raise serializers.ValidationError(
                 'Нельзя подписки размножать против их воли >:['
             )
